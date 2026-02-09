@@ -97,10 +97,10 @@ import java.util.function.LongConsumer;
 import java.util.regex.Pattern;
 
 /**
- * 修改历史：
- * 2026-02-09 Shmming  增加审计日志参数读取
+ * 修改历史： 2026-02-09 Shmming 增加审计日志参数读取
  *
- * Modified By Shmming on 2026/2/9
+ * <p>Modified By Shmming on 2026/2/9
+ *
  * @author shmming
  */
 public class IoTDBDescriptor {

@@ -12,7 +12,7 @@ public final class AuditLogParameters {
   }
 
   /** 是否启用审计日志参数名 */
-  public static final String AUDIT_LOG_ENABLED = "audit_logger_enabled";
+  public static final String AUDIT_LOG_ENABLED = "enable_audit_log";
 
   /** 审计日志存储策略参数名 */
   public static final String AUDIT_LOG_STORAGE = "audit_log_storage";

@@ -2129,19 +2129,19 @@ enable_retry_for_unknown_error=false
 
 # whether to enable the audit log.
 # Datatype: Boolean
-# enable_audit_log=false
+enable_audit_log=true
 
 # Output location of audit logs
 # Datatype: String
 # IOTDB: the stored time series is: root.__system.audit._{user}
 # LOGGER: log_audit.log in the log directory
-# audit_log_storage=IOTDB,LOGGER
+audit_log_storage=IOTDB,LOGGER
 
 # whether enable audit log for DML operation of data
 # whether enable audit log for DDL operation of schema
 # whether enable audit log for QUERY operation of data and schema
 # Datatype: String
-# audit_log_operation=DML,DDL,QUERY
+audit_log_operation=DML,DDL,QUERY
 
 # whether the local write api records audit logs
 # Datatype: Boolean
@@ -2149,4 +2149,4 @@ enable_retry_for_unknown_error=false
 # MQTT insert api
 # RestAPI insert api
 # This parameter will cover the DML in audit_log_operation
-# enable_audit_log_for_native_insert_api=true
+enable_audit_log_for_native_insert_api=true
