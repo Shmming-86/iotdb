@@ -32,6 +32,8 @@ import org.apache.iotdb.commons.utils.NodeUrlUtils;
 import org.apache.iotdb.confignode.rpc.thrift.TCQConfig;
 import org.apache.iotdb.confignode.rpc.thrift.TGlobalConfig;
 import org.apache.iotdb.confignode.rpc.thrift.TRatisConfig;
+import org.apache.iotdb.db.audit.AuditLogOperation;
+import org.apache.iotdb.db.audit.AuditLogStorage;
 import org.apache.iotdb.db.consensus.DataRegionConsensusImpl;
 import org.apache.iotdb.db.exception.query.QueryProcessException;
 import org.apache.iotdb.db.pipe.resource.log.PipePeriodicalLogReducer;
@@ -94,6 +96,13 @@ import java.util.Set;
 import java.util.function.LongConsumer;
 import java.util.regex.Pattern;
 
+/**
+ * 修改历史：
+ * 2026-02-09 Shmming  增加审计日志参数读取
+ *
+ * Modified By Shmming on 2026/2/9
+ * @author shmming
+ */
 public class IoTDBDescriptor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(IoTDBDescriptor.class);
@@ -1115,6 +1124,57 @@ public class IoTDBDescriptor {
     loadQuerySampleThroughput(properties);
     // update trusted_uri_pattern
     loadTrustedUriPattern(properties);
+
+    // Add audit logger
+    loadAuditLoggerProps(properties);
+  }
+
+  /**
+   * load audit logger properties
+   *
+   * @param properties properties
+   * @throws IOException io exception
+   */
+  private void loadAuditLoggerProps(TrimProperties properties) throws IOException {
+    conf.setEnableAuditLog(
+        Boolean.parseBoolean(
+            properties.getProperty(
+                AuditLogParameters.AUDIT_LOG_ENABLED,
+                ConfigurationFileUtils.getConfigurationDefaultValue(
+                    AuditLogParameters.AUDIT_LOG_ENABLED))));
+
+    String[] auditLogStorage =
+        properties
+            .getProperty(
+                AuditLogParameters.AUDIT_LOG_STORAGE,
+                ConfigurationFileUtils.getConfigurationDefaultValue(
+                    AuditLogParameters.AUDIT_LOG_STORAGE))
+            .split(",");
+    List<AuditLogStorage> auditLogStorageList = new ArrayList<>();
+    for (String storage : auditLogStorage) {
+      auditLogStorageList.add(AuditLogStorage.valueOf(storage));
+    }
+    conf.setAuditLogStorage(auditLogStorageList);
+
+    String[] auditLogOperation =
+        properties
+            .getProperty(
+                AuditLogParameters.AUDIT_LOG_OPERATION,
+                ConfigurationFileUtils.getConfigurationDefaultValue(
+                    AuditLogParameters.AUDIT_LOG_OPERATION))
+            .split(",");
+    List<AuditLogOperation> auditLogOperationList = new ArrayList<>();
+    for (String operation : auditLogOperation) {
+      auditLogOperationList.add(AuditLogOperation.valueOf(operation));
+    }
+    conf.setAuditLogOperation(auditLogOperationList);
+
+    conf.setEnableAuditLogForNativeInsertApi(
+        Boolean.parseBoolean(
+            properties.getProperty(
+                AuditLogParameters.AUDIT_LOG_ENABLE_FOR_NATIVE_INSERT_API,
+                ConfigurationFileUtils.getConfigurationDefaultValue(
+                    AuditLogParameters.AUDIT_LOG_ENABLE_FOR_NATIVE_INSERT_API))));
   }
 
   private void loadFixedSizeLimitForQuery(
