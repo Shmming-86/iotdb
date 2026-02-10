@@ -65,6 +65,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import static org.apache.iotdb.commons.pipe.config.constant.PipeSourceConstant.EXTRACTOR_END_TIME_KEY;
+import static org.apache.iotdb.commons.pipe.config.constant.PipeSourceConstant.EXTRACTOR_FORWARDING_PIPE_REQUESTS_DEFAULT_VALUE;
+import static org.apache.iotdb.commons.pipe.config.constant.PipeSourceConstant.EXTRACTOR_FORWARDING_PIPE_REQUESTS_KEY;
 import static org.apache.iotdb.commons.pipe.config.constant.PipeSourceConstant.EXTRACTOR_MODS_ENABLE_DEFAULT_VALUE;
 import static org.apache.iotdb.commons.pipe.config.constant.PipeSourceConstant.EXTRACTOR_MODS_ENABLE_KEY;
 import static org.apache.iotdb.commons.pipe.config.constant.PipeSourceConstant.EXTRACTOR_REALTIME_LOOSE_RANGE_ALL_VALUE;
@@ -74,10 +76,20 @@ import static org.apache.iotdb.commons.pipe.config.constant.PipeSourceConstant.E
 import static org.apache.iotdb.commons.pipe.config.constant.PipeSourceConstant.EXTRACTOR_REALTIME_LOOSE_RANGE_TIME_VALUE;
 import static org.apache.iotdb.commons.pipe.config.constant.PipeSourceConstant.EXTRACTOR_START_TIME_KEY;
 import static org.apache.iotdb.commons.pipe.config.constant.PipeSourceConstant.SOURCE_END_TIME_KEY;
+import static org.apache.iotdb.commons.pipe.config.constant.PipeSourceConstant.SOURCE_FORWARDING_PIPE_REQUESTS_KEY;
 import static org.apache.iotdb.commons.pipe.config.constant.PipeSourceConstant.SOURCE_MODS_ENABLE_KEY;
 import static org.apache.iotdb.commons.pipe.config.constant.PipeSourceConstant.SOURCE_REALTIME_LOOSE_RANGE_KEY;
 import static org.apache.iotdb.commons.pipe.config.constant.PipeSourceConstant.SOURCE_START_TIME_KEY;
 
+/**
+ * Modified By Shmming on 2026/2/9
+ *
+ * <p>Modification:
+ *
+ * <p>2026/2/9 Shmming 根据PIPE参数配置forwardingPipeRequests变量
+ *
+ * @author Shmming
+ */
 public abstract class PipeRealtimeDataRegionSource implements PipeExtractor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(PipeRealtimeDataRegionSource.class);
@@ -233,7 +245,11 @@ public abstract class PipeRealtimeDataRegionSource implements PipeExtractor {
             ? TimePartitionUtils.getTimePartitionId(realtimeDataExtractionEndTime)
             : TimePartitionUtils.getTimePartitionId(realtimeDataExtractionEndTime) - 1;
 
-    isForwardingPipeRequests = true;
+    isForwardingPipeRequests =
+        parameters.getBooleanOrDefault(
+            Arrays.asList(
+                EXTRACTOR_FORWARDING_PIPE_REQUESTS_KEY, SOURCE_FORWARDING_PIPE_REQUESTS_KEY),
+            EXTRACTOR_FORWARDING_PIPE_REQUESTS_DEFAULT_VALUE);
 
     shouldTransferModFile =
         parameters.getBooleanOrDefault(
