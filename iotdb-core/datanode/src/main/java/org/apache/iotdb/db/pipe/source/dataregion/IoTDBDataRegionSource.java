@@ -87,6 +87,15 @@ import static org.apache.iotdb.commons.pipe.config.constant.PipeSourceConstant.S
 import static org.apache.iotdb.commons.pipe.config.constant.PipeSourceConstant.SOURCE_START_TIME_KEY;
 import static org.apache.iotdb.commons.pipe.config.constant.PipeSourceConstant.SOURCE_WATERMARK_INTERVAL_KEY;
 
+/**
+ * Modified By Shmming on 2026/2/9
+ *
+ * <p>Modification:
+ *
+ * <p>2026/2/9 Shmming 删除forwardingPipeRequests必须为false的限制
+ *
+ * @author Shmming
+ */
 public class IoTDBDataRegionSource extends IoTDBSource {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(IoTDBDataRegionSource.class);
